@@ -72,7 +72,7 @@ function(add_dex target)
     OUTPUT_NAME classes
     OUTPUT_DIR ${ARGV_OUTPUT_DIR}
     SOURCES ${ARGV_SOURCES}
-    INCLUDE_JARS ${ARGV_INCLUDES_JARS}
+    INCLUDE_JARS ${ARGV_INCLUDE_JARS}
   )
 
   find_d8(d8)
