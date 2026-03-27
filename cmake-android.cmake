@@ -48,8 +48,6 @@ function(find_android_jar result)
 endfunction()
 
 function(add_dex target)
-  use_java()
-
   set(one_value_keywords
     OUTPUT_DIR
   )
