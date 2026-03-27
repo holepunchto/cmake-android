@@ -16,6 +16,6 @@
   },
   "homepage": "https://github.com/holepunchto/cmake-android#readme",
   "dependencies": {
-    "cmake-java": "^0.1.0"
+    "cmake-java": "^0.1.1"
   }
 }
