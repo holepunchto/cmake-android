@@ -16,6 +16,22 @@ function(find_d8 result)
   return(PROPAGATE ${result})
 endfunction()
 
+function(find_android_stl)
+  find_library(
+    android_stl
+    ${ANDROID_STL}
+    PATHS "${CMAKE_SYSROOT}/usr/lib"
+    PATH_SUFFIXES "${CMAKE_LIBRARY_ARCHITECTURE}"
+    NO_DEFAULT_PATH
+    NO_CMAKE_FIND_ROOT_PATH
+    REQUIRED
+  )
+
+  set(${result} ${android_stl})
+
+  return(PROPAGATE ${result})
+endfunction()
+
 function(find_android_jar result)
   find_file(
     android_jar
