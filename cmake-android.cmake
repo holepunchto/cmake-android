@@ -67,7 +67,7 @@ function(add_dex target)
 
   add_jar(
     ${target}
-    OUTPUT_NAME classes
+    OUTPUT_NAME ${target}
     OUTPUT_DIR ${ARGV_OUTPUT_DIR}
     SOURCES ${ARGV_SOURCES}
     INCLUDE_JARS ${ARGV_INCLUDE_JARS}
@@ -75,24 +75,28 @@ function(add_dex target)
 
   find_d8(d8)
 
-  set(args $<IF:$<CONFIG:Debug>,--debug,--release> --output ${CMAKE_BINARY_DIR})
+  set(dex "${ARGV_OUTPUT_DIR}/${target}.dex")
+
+  set(args $<IF:$<CONFIG:Debug>,--debug,--release> --output "${dex}")
 
   foreach(jar IN LISTS ARGV_INCLUDE_JARS)
     list(APPEND args --lib "${jar}")
   endforeach()
 
-  list(APPEND args "${CMAKE_BINARY_DIR}/classes.jar")
+  list(APPEND args "$<TARGET_PROPERTY:${target},JAR_FILE>")
 
   add_custom_command(
     TARGET ${target}
     POST_BUILD
-    BYPRODUCTS "${CMAKE_BINARY_DIR}/classes.dex"
+    BYPRODUCTS "${dex}/classes.dex"
+    COMMAND "${CMAKE_COMMAND}" -E make_directory "${dex}"
     COMMAND "${d8}" ${args}
   )
 
   set_target_properties(
     ${target}
     PROPERTIES
-    DEX_FILE "${CMAKE_BINARY_DIR}/classes.dex"
+    DEX_DIR "${dex}"
+    DEX_FILE "${dex}/classes.dex"
   )
 endfunction()
