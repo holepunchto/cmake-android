@@ -49,6 +49,7 @@ endfunction()
 
 function(add_dex target)
   set(one_value_keywords
+    OUTPUT_NAME
     OUTPUT_DIR
   )
 
@@ -61,13 +62,17 @@ function(add_dex target)
     PARSE_ARGV 1 ARGV "" "${one_value_keywords}" "${multi_value_keywords}"
   )
 
+  if(NOT DEFINED ARGV_OUTPUT_NAME)
+    set(ARGV_OUTPUT_NAME ${target})
+  endif()
+
   if(NOT DEFINED ARGV_OUTPUT_DIR)
     set(ARGV_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}")
   endif()
 
   add_jar(
     ${target}
-    OUTPUT_NAME ${target}
+    OUTPUT_NAME ${ARGV_OUTPUT_NAME}
     OUTPUT_DIR ${ARGV_OUTPUT_DIR}
     SOURCES ${ARGV_SOURCES}
     INCLUDE_JARS ${ARGV_INCLUDE_JARS}
@@ -75,7 +80,7 @@ function(add_dex target)
 
   find_d8(d8)
 
-  set(dex "${ARGV_OUTPUT_DIR}/${target}.dex")
+  set(dex "${ARGV_OUTPUT_DIR}/${ARGV_OUTPUT_NAME}.dex")
 
   set(args $<IF:$<CONFIG:Debug>,--debug,--release> --output "${dex}")
 
