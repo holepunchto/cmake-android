@@ -1,6 +1,6 @@
 {
   "name": "cmake-android",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Android utilities for CMake",
   "files": [
     "*.cmake"
