@@ -33,10 +33,22 @@ function(find_android_stl)
 endfunction()
 
 function(find_android_jar result)
+  set(one_value_keywords
+    PLATFORM
+  )
+
+  cmake_parse_arguments(
+    PARSE_ARGV 1 ARGV "" "${one_value_keywords}" ""
+  )
+
+  if(NOT DEFINED ARGV_PLATFORM)
+    set(ARGV_PLATFORM ${ANDROID_PLATFORM})
+  endif()
+
   find_file(
     android_jar
     NAMES android.jar
-    PATHS "${ANDROID_HOME}/platforms/${ANDROID_PLATFORM}"
+    PATHS "${ANDROID_HOME}/platforms/${ARGV_PLATFORM}"
     NO_DEFAULT_PATH
     NO_CMAKE_FIND_ROOT_PATH
     REQUIRED
