@@ -92,9 +92,11 @@ function(add_dex target)
 
   find_d8(d8)
 
+  set(dex_dir "${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/${target}.dir/dex")
+
   set(dex "${ARGV_OUTPUT_DIR}/${ARGV_OUTPUT_NAME}.dex")
 
-  set(args $<IF:$<CONFIG:Debug>,--debug,--release> --output "${dex}")
+  set(args $<IF:$<CONFIG:Debug>,--debug,--release> --output "${dex_dir}")
 
   foreach(jar IN LISTS ARGV_INCLUDE_JARS)
     list(APPEND args --lib "${jar}")
@@ -105,15 +107,15 @@ function(add_dex target)
   add_custom_command(
     TARGET ${target}
     POST_BUILD
-    BYPRODUCTS "${dex}/classes.dex"
-    COMMAND "${CMAKE_COMMAND}" -E make_directory "${dex}"
+    BYPRODUCTS "${dex}"
+    COMMAND "${CMAKE_COMMAND}" -E make_directory "${dex_dir}"
     COMMAND "${d8}" ${args}
+    COMMAND "${CMAKE_COMMAND}" -E copy "${dex_dir}/classes.dex" "${dex}"
   )
 
   set_target_properties(
     ${target}
     PROPERTIES
-    DEX_DIR "${dex}"
-    DEX_FILE "${dex}/classes.dex"
+    DEX_FILE "${dex}"
   )
 endfunction()
