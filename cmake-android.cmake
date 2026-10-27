@@ -68,11 +68,20 @@ function(add_dex target)
   set(multi_value_keywords
     SOURCES
     INCLUDE_JARS
+    PROGUARD_RULES
   )
 
   cmake_parse_arguments(
     PARSE_ARGV 1 ARGV "" "${one_value_keywords}" "${multi_value_keywords}"
   )
+
+  # R8 applies the rules embedded in the JAR when shrinking an application that
+  # depends on it, such as to keep the classes that only native code calls.
+  set(resources)
+
+  if(DEFINED ARGV_PROGUARD_RULES)
+    set(resources RESOURCES NAMESPACE "META-INF/proguard" ${ARGV_PROGUARD_RULES})
+  endif()
 
   if(NOT DEFINED ARGV_OUTPUT_NAME)
     set(ARGV_OUTPUT_NAME ${target})
@@ -88,6 +97,7 @@ function(add_dex target)
     OUTPUT_DIR ${ARGV_OUTPUT_DIR}
     SOURCES ${ARGV_SOURCES}
     INCLUDE_JARS ${ARGV_INCLUDE_JARS}
+    ${resources}
   )
 
   find_d8(d8)
