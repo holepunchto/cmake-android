@@ -91,6 +91,12 @@ function(add_dex target)
     set(ARGV_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}")
   endif()
 
+  # Compile for a fixed release rather than that of the JDK, as d8 rejects class
+  # files newer than it knows.
+  if(NOT CMAKE_JAVA_COMPILE_FLAGS MATCHES "--release")
+    list(APPEND CMAKE_JAVA_COMPILE_FLAGS --release 11)
+  endif()
+
   add_jar(
     ${target}
     OUTPUT_NAME ${ARGV_OUTPUT_NAME}
